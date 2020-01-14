@@ -1,35 +1,14 @@
 {
   "messageServer": {
-    "host": "127.0.0.1",
+    "host": "server",
     "port": 6689
   },
   "inputs": [
     {
-      "source": "server1",
-      "stream": "app1",
+      "source": "s",
+      "stream": "a",
       "config": {
-        "path": "log.io-demo/file-generator/app1-server1.log"
-      }
-    },
-    {
-      "source": "server2",
-      "stream": "app1",
-      "config": {
-        "path": "log.io-demo/file-generator/app1-server2.log"
-      }
-    },
-    {
-      "source": "server1",
-      "stream": "app2",
-      "config": {
-        "path": "log.io-demo/file-generator/app2-server1.log"
-      }
-    },
-    {
-      "source": "server2",
-      "stream": "app2",
-      "config": {
-        "path": "log.io-demo/file-generator/app2-server2.log"
+        "path": "/var/log/containers/fluentd-fluentd-elasticsearch-w9nm7_default_fluentd-fluentd-elasticsearch-495320f14516451ac0e7975d813e5b137ab47b38b683c6040cf3aea1608d9eb2.log"
       }
     }
   ]

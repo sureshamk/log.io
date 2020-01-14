@@ -12,7 +12,7 @@ const openAsync = promisify(fs.open)
 const readAsync = promisify(fs.read)
 const readdirAsync = promisify(fs.readdir)
 const statAsync = promisify(fs.stat)
-
+const env = process.env
 const fds: {[filePath: string]: number} = {}
 
 /**
@@ -58,6 +58,8 @@ async function sendNewMessages(
   await readAsync(fd, readBuffer, 0, newSize - oldSize, oldSize)
   const messages = readBuffer.toString().split('\r\n').filter(msg => !!msg.trim())
   messages.forEach((message) => {
+    console.log(`+msg|${streamName}|${sourceName}|${message}`)
+
     client.write(`+msg|${streamName}|${sourceName}|${message}\0`)
   })
 }
@@ -85,6 +87,8 @@ async function startFileWatcher(
   const fileSizes = await initializeFileSizes(inputPath, isDir)
   const watcher = fs.watch(inputPath)
   watcher.on('change', async (eventType: string, fileName: string) => {
+    console.log(`change : ${eventType} ${fileName}`)
+
     const filePath = isDir ? path.join(inputPath, fileName) : inputPath
     const newSize = (await statAsync(filePath)).size
     await sendNewMessages(
@@ -110,8 +114,8 @@ async function sleep(ms: number): Promise<void> {
  * Start file input process
  */
 async function main(config: InputConfig): Promise<void> {
-  const { messageServer, inputs } = config
-  const serverStr = `${messageServer.host}:${messageServer.port}`
+  const {  inputs } = config
+  const serverStr = `${env.MESSAGE_SERVER_HOST}:${env.MESSAGE_SERVER_PORT}`
   const client = new Socket()
   let lastConnectionAttempt = new Date().getTime()
   // Register new inputs w/ server
@@ -130,11 +134,11 @@ async function main(config: InputConfig): Promise<void> {
       // eslint-disable-next-line no-console
       console.error(`Unable to connect to server (${serverStr}), retrying...`)
       await sleep(5000)
-      client.connect(messageServer.port, messageServer.host)
+      client.connect(env.MESSAGE_SERVER_PORT, env.MESSAGE_SERVER_HOST)
     }
   })
   // Connect to server & start watching files for changes
-  client.connect(messageServer.port, messageServer.host)
+  client.connect(env.MESSAGE_SERVER_PORT, env.MESSAGE_SERVER_HOST)
   await Promise.all(inputs.map(async (input) => (
     startFileWatcher(client, input.stream, input.source, input.config.path)
   )))

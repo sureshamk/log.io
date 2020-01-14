@@ -1,0 +1,16 @@
+apiVersion: skaffold/v2alpha1
+kind: Config
+metadata:
+  name: log.io
+build:
+  artifacts:
+  - image: file
+    context: inputs/file
+  - image: server
+    context: server
+deploy:
+  kubectl:
+    manifests:
+    - file-deployment.yaml
+    - server-deployment.yaml
+    - server-service.yaml

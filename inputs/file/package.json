@@ -24,8 +24,7 @@
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-    "start": "node lib/index.js",
-    "prepare": "npm run build"
+    "start": "node lib/index.js"
   },
   "license": "Apache-2.0",
   "devDependencies": {

@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  server:
+    build:
+      context: ./server
+    ports:
+      - "6689:6689"
+      - "6688:6688"
+    volumes:
+      - ./config/server-config.json:/app/config.json
+      - ./tmp/logs/:/tmp/logs
+
+  file:
+    build:
+      context: ./inputs/file
+    volumes:
+      - ./config/config.json:/app/config.json
+      - ./tmp/logs/:/tmp/logs
+#  web:
+#    image: nginx:latest
+#    ports:
+#      - "8000:80"
+#    volumes:
+#      - ./config/config.json:/app/config.json
+#      - ./tmp/logs/:/tmp/logs
+
+
+

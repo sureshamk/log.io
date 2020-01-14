@@ -1,0 +1,23 @@
+name: Publish Docker
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Build, Tag, Publish  logio-server Docker
+        uses: mr-smithers-excellent/docker-build-push@v1.0
+        with:
+          image: sureshamk/logio-server
+          registry: docker.io
+          dockerfile: server/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build, Tag, Publish logio-harvester Docker
+        uses: mr-smithers-excellent/docker-build-push@v1.0
+        with:
+          image: sureshamk/logio-harvester
+          registry: docker.io
+          dockerfile: inputs/file/Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
